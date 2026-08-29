@@ -1,0 +1,778 @@
+{
+  "manifest_schema_version": 3,
+  "sdk_version": "5.13.0",
+  "app_id": "activecampaign-connector",
+  "version": "0.1.0",
+  "name": "ActiveCampaign",
+  "description": "Connect your own ActiveCampaign account (API URL + API key) to manage contacts, lists, campaigns, automations, and deals.",
+  "icon": "icon.svg",
+  "actions_explicit": true,
+  "system": false,
+  "capabilities": [
+    "activecampaign:read",
+    "activecampaign:write"
+  ],
+  "tools": [
+    {
+      "name": "connect_activecampaign",
+      "description": "Connect your own ActiveCampaign account by saving its API URL and API key, after checking they actually work.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "label": {
+            "default": "",
+            "description": "A friendly name for this account, e.g. 'Marketing team'.",
+            "title": "Label",
+            "type": "string"
+          },
+          "api_url": {
+            "description": "Your ActiveCampaign account URL or API URL, e.g. https://youraccount.api-us1.com/api/3 (Settings > Developer).",
+            "title": "Api Url",
+            "type": "string"
+          },
+          "access_token": {
+            "description": "Your ActiveCampaign API key (Settings > Developer).",
+            "title": "Access Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "api_url",
+          "access_token"
+        ],
+        "title": "ConnectActiveCampaignParams",
+        "type": "object"
+      },
+      "return_schema": {},
+      "event": "activecampaign-connector.connect_activecampaign",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tool_activecampaign-connector_chat"
+    },
+    {
+      "name": "disconnect_activecampaign",
+      "description": "Disconnect an ActiveCampaign account: deletes the saved API URL/API key. Nothing in ActiveCampaign itself is changed.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "description": "The connection id to disconnect, from list_connections.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "connection_id"
+        ],
+        "title": "DisconnectActiveCampaignParams",
+        "type": "object"
+      },
+      "return_schema": {},
+      "event": "activecampaign-connector.disconnect_activecampaign",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tool_activecampaign-connector_chat"
+    },
+    {
+      "name": "list_connections",
+      "description": "List the connected ActiveCampaign accounts.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {},
+        "title": "NoParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "ActiveCampaignConnection": {
+            "properties": {
+              "id": {
+                "default": "",
+                "title": "Id",
+                "type": "string"
+              },
+              "label": {
+                "default": "",
+                "title": "Label",
+                "type": "string"
+              },
+              "api_url": {
+                "default": "",
+                "title": "Api Url",
+                "type": "string"
+              }
+            },
+            "title": "ActiveCampaignConnection",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "connections": {
+            "items": {
+              "$ref": "#/$defs/ActiveCampaignConnection"
+            },
+            "title": "Connections",
+            "type": "array"
+          }
+        },
+        "title": "ConnectionList",
+        "type": "object"
+      },
+      "event": "",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tool_activecampaign-connector_chat"
+    },
+    {
+      "name": "list_contacts",
+      "description": "List contacts in the connected ActiveCampaign account, optionally filtered by exact email.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Which saved ActiveCampaign account to use. Omit if only one is connected.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "email": {
+            "default": "",
+            "description": "Filter to a contact with this exact email, if given.",
+            "title": "Email",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Max number of contacts to return.",
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "ListContactsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "Contact": {
+            "properties": {
+              "id": {
+                "default": "",
+                "title": "Id",
+                "type": "string"
+              },
+              "email": {
+                "default": "",
+                "title": "Email",
+                "type": "string"
+              },
+              "first_name": {
+                "default": "",
+                "title": "First Name",
+                "type": "string"
+              },
+              "last_name": {
+                "default": "",
+                "title": "Last Name",
+                "type": "string"
+              },
+              "phone": {
+                "default": "",
+                "title": "Phone",
+                "type": "string"
+              }
+            },
+            "title": "Contact",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "contacts": {
+            "items": {
+              "$ref": "#/$defs/Contact"
+            },
+            "title": "Contacts",
+            "type": "array"
+          }
+        },
+        "title": "ContactList",
+        "type": "object"
+      },
+      "event": "",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tool_activecampaign-connector_chat"
+    },
+    {
+      "name": "create_contact",
+      "description": "Create a new contact in the connected ActiveCampaign account.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Which saved ActiveCampaign account to use. Omit if only one is connected.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "email": {
+            "description": "The contact's email address.",
+            "title": "Email",
+            "type": "string"
+          },
+          "first_name": {
+            "default": "",
+            "description": "The contact's first name.",
+            "title": "First Name",
+            "type": "string"
+          },
+          "last_name": {
+            "default": "",
+            "description": "The contact's last name.",
+            "title": "Last Name",
+            "type": "string"
+          },
+          "phone": {
+            "default": "",
+            "description": "The contact's phone number.",
+            "title": "Phone",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "title": "CreateContactParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "contact_id": {
+            "default": "",
+            "title": "Contact Id",
+            "type": "string"
+          },
+          "email": {
+            "default": "",
+            "title": "Email",
+            "type": "string"
+          }
+        },
+        "title": "ContactCreateResult",
+        "type": "object"
+      },
+      "event": "activecampaign-connector.create_contact",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tool_activecampaign-connector_chat"
+    },
+    {
+      "name": "list_mailing_lists",
+      "description": "List mailing lists configured on the connected ActiveCampaign account.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Which saved ActiveCampaign account to use. Omit if only one is connected.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "title": "ListListsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "MailingList": {
+            "properties": {
+              "id": {
+                "default": "",
+                "title": "Id",
+                "type": "string"
+              },
+              "name": {
+                "default": "",
+                "title": "Name",
+                "type": "string"
+              },
+              "stringid": {
+                "default": "",
+                "title": "Stringid",
+                "type": "string"
+              }
+            },
+            "title": "MailingList",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "lists": {
+            "items": {
+              "$ref": "#/$defs/MailingList"
+            },
+            "title": "Lists",
+            "type": "array"
+          }
+        },
+        "title": "MailingListList",
+        "type": "object"
+      },
+      "event": "",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tool_activecampaign-connector_chat"
+    },
+    {
+      "name": "create_mailing_list",
+      "description": "Create a new mailing list on the connected ActiveCampaign account.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Which saved ActiveCampaign account to use. Omit if only one is connected.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "name": {
+            "description": "The new list's name, e.g. 'Newsletter subscribers'.",
+            "title": "Name",
+            "type": "string"
+          },
+          "sender_url": {
+            "description": "The sender's website URL, required by ActiveCampaign for CAN-SPAM compliance.",
+            "title": "Sender Url",
+            "type": "string"
+          },
+          "sender_reminder": {
+            "default": "You are receiving this email because you subscribed.",
+            "description": "The reminder text shown to recipients about why they're receiving this email.",
+            "title": "Sender Reminder",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "sender_url"
+        ],
+        "title": "CreateListParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "list_id": {
+            "default": "",
+            "title": "List Id",
+            "type": "string"
+          },
+          "name": {
+            "default": "",
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "title": "ListCreateResult",
+        "type": "object"
+      },
+      "event": "activecampaign-connector.create_mailing_list",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tool_activecampaign-connector_chat"
+    },
+    {
+      "name": "list_campaigns",
+      "description": "List email campaigns (one-off sends) in the connected ActiveCampaign account.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Which saved ActiveCampaign account to use. Omit if only one is connected.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "status": {
+            "default": "",
+            "description": "Filter by campaign status, e.g. '0' (draft), '5' (sent). Leave empty for all.",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "title": "ListCampaignsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "Campaign": {
+            "properties": {
+              "id": {
+                "default": "",
+                "title": "Id",
+                "type": "string"
+              },
+              "name": {
+                "default": "",
+                "title": "Name",
+                "type": "string"
+              },
+              "type": {
+                "default": "",
+                "title": "Type",
+                "type": "string"
+              },
+              "status": {
+                "default": "",
+                "title": "Status",
+                "type": "string"
+              },
+              "sdate": {
+                "default": "",
+                "title": "Sdate",
+                "type": "string"
+              }
+            },
+            "title": "Campaign",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "campaigns": {
+            "items": {
+              "$ref": "#/$defs/Campaign"
+            },
+            "title": "Campaigns",
+            "type": "array"
+          }
+        },
+        "title": "CampaignList",
+        "type": "object"
+      },
+      "event": "",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tool_activecampaign-connector_chat"
+    },
+    {
+      "name": "list_automations",
+      "description": "List automations (multi-step nurture sequences) configured in the connected ActiveCampaign account.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Which saved ActiveCampaign account to use. Omit if only one is connected.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "title": "ListAutomationsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "Automation": {
+            "properties": {
+              "id": {
+                "default": "",
+                "title": "Id",
+                "type": "string"
+              },
+              "name": {
+                "default": "",
+                "title": "Name",
+                "type": "string"
+              },
+              "status": {
+                "default": "",
+                "title": "Status",
+                "type": "string"
+              },
+              "entered": {
+                "default": "",
+                "title": "Entered",
+                "type": "string"
+              }
+            },
+            "title": "Automation",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "automations": {
+            "items": {
+              "$ref": "#/$defs/Automation"
+            },
+            "title": "Automations",
+            "type": "array"
+          }
+        },
+        "title": "AutomationList",
+        "type": "object"
+      },
+      "event": "",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tool_activecampaign-connector_chat"
+    },
+    {
+      "name": "list_deals",
+      "description": "List sales pipeline deals in the connected ActiveCampaign account.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Which saved ActiveCampaign account to use. Omit if only one is connected.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Max number of deals to return.",
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "ListDealsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "Deal": {
+            "properties": {
+              "id": {
+                "default": "",
+                "title": "Id",
+                "type": "string"
+              },
+              "title": {
+                "default": "",
+                "title": "Title",
+                "type": "string"
+              },
+              "value": {
+                "default": "",
+                "title": "Value",
+                "type": "string"
+              },
+              "currency": {
+                "default": "",
+                "title": "Currency",
+                "type": "string"
+              },
+              "status": {
+                "default": "",
+                "title": "Status",
+                "type": "string"
+              }
+            },
+            "title": "Deal",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "deals": {
+            "items": {
+              "$ref": "#/$defs/Deal"
+            },
+            "title": "Deals",
+            "type": "array"
+          }
+        },
+        "title": "DealList",
+        "type": "object"
+      },
+      "event": "",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tool_activecampaign-connector_chat"
+    },
+    {
+      "name": "create_deal",
+      "description": "Create a new sales pipeline deal in the connected ActiveCampaign account.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Which saved ActiveCampaign account to use. Omit if only one is connected.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "title": {
+            "description": "The deal's title, e.g. 'Acme Corp -- Enterprise plan'.",
+            "title": "Title",
+            "type": "string"
+          },
+          "value": {
+            "default": 0,
+            "description": "The deal's value in cents (e.g. 500000 for $5,000.00).",
+            "title": "Value",
+            "type": "integer"
+          },
+          "currency": {
+            "default": "usd",
+            "description": "The deal's currency code, e.g. 'usd'.",
+            "title": "Currency",
+            "type": "string"
+          },
+          "contact_id": {
+            "default": "",
+            "description": "The contact id to link this deal to, from list_contacts.",
+            "title": "Contact Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ],
+        "title": "CreateDealParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "deal_id": {
+            "default": "",
+            "title": "Deal Id",
+            "type": "string"
+          },
+          "title": {
+            "default": "",
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "title": "DealCreateResult",
+        "type": "object"
+      },
+      "event": "activecampaign-connector.create_deal",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tool_activecampaign-connector_chat"
+    },
+    {
+      "name": "audit_activecampaign_account",
+      "description": "Build an account snapshot with contact, list, campaign, automation, and deal counts.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Which saved ActiveCampaign account to use. Omit if only one is connected.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "title": "AuditActiveCampaignAccountParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "total_contacts": {
+            "default": 0,
+            "title": "Total Contacts",
+            "type": "integer"
+          },
+          "total_lists": {
+            "default": 0,
+            "title": "Total Lists",
+            "type": "integer"
+          },
+          "total_campaigns": {
+            "default": 0,
+            "title": "Total Campaigns",
+            "type": "integer"
+          },
+          "total_automations": {
+            "default": 0,
+            "title": "Total Automations",
+            "type": "integer"
+          },
+          "total_deals": {
+            "default": 0,
+            "title": "Total Deals",
+            "type": "integer"
+          }
+        },
+        "title": "ActiveCampaignAccountReport",
+        "type": "object"
+      },
+      "event": "",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tool_activecampaign-connector_chat"
+    }
+  ],
+  "signals": [],
+  "schedules": [],
+  "required_scopes": [],
+  "icon_size_bytes": 677,
+  "panels": [
+    {
+      "panel_id": "activecampaign_sidebar",
+      "slot": "left",
+      "title": "",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": false
+    },
+    {
+      "panel_id": "activecampaign_settings",
+      "slot": "center",
+      "title": "",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": false
+    }
+  ]
+}
