@@ -18,7 +18,9 @@
       "description": "Connect your own ActiveCampaign account by saving its API URL and API key, after checking they actually work.",
       "action_type": "write",
       "chain_callable": true,
-      "effects": [],
+      "effects": [
+        "create:connection"
+      ],
       "id_projection": "",
       "params_schema": {
         "properties": {
@@ -46,7 +48,27 @@
         "title": "ConnectActiveCampaignParams",
         "type": "object"
       },
-      "return_schema": {},
+      "return_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "label": {
+            "default": "",
+            "title": "Label",
+            "type": "string"
+          },
+          "api_url": {
+            "default": "",
+            "title": "Api Url",
+            "type": "string"
+          }
+        },
+        "title": "ConnectActiveCampaignResult",
+        "type": "object"
+      },
       "event": "activecampaign-connector.connect_activecampaign",
       "background": false,
       "long_running": false,
@@ -58,7 +80,9 @@
       "description": "Disconnect an ActiveCampaign account: deletes the saved API URL/API key. Nothing in ActiveCampaign itself is changed.",
       "action_type": "write",
       "chain_callable": true,
-      "effects": [],
+      "effects": [
+        "delete:connection"
+      ],
       "id_projection": "",
       "params_schema": {
         "properties": {
@@ -74,7 +98,22 @@
         "title": "DisconnectActiveCampaignParams",
         "type": "object"
       },
-      "return_schema": {},
+      "return_schema": {
+        "properties": {
+          "deleted": {
+            "default": false,
+            "title": "Deleted",
+            "type": "boolean"
+          },
+          "id": {
+            "default": "",
+            "title": "Id",
+            "type": "string"
+          }
+        },
+        "title": "DeleteResult",
+        "type": "object"
+      },
       "event": "activecampaign-connector.disconnect_activecampaign",
       "background": false,
       "long_running": false,
@@ -223,7 +262,9 @@
       "description": "Create a new contact in the connected ActiveCampaign account.",
       "action_type": "write",
       "chain_callable": true,
-      "effects": [],
+      "effects": [
+        "create:contact"
+      ],
       "id_projection": "",
       "params_schema": {
         "properties": {
@@ -351,7 +392,9 @@
       "description": "Create a new mailing list on the connected ActiveCampaign account.",
       "action_type": "write",
       "chain_callable": true,
-      "effects": [],
+      "effects": [
+        "create:list"
+      ],
       "id_projection": "",
       "params_schema": {
         "properties": {
@@ -632,7 +675,9 @@
       "description": "Create a new sales pipeline deal in the connected ActiveCampaign account.",
       "action_type": "write",
       "chain_callable": true,
-      "effects": [],
+      "effects": [
+        "create:deal"
+      ],
       "id_projection": "",
       "params_schema": {
         "properties": {
@@ -755,6 +800,11 @@
   "schedules": [],
   "required_scopes": [],
   "icon_size_bytes": 677,
+  "lifecycle": {
+    "health_check": {
+      "interval_sec": 60
+    }
+  },
   "panels": [
     {
       "panel_id": "activecampaign_sidebar",
