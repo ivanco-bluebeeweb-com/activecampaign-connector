@@ -1,0 +1,14 @@
+{
+  "connect_activecampaign": 0,
+  "disconnect_activecampaign": 0,
+  "list_connections": 0,
+  "list_contacts": 8,
+  "create_contact": 16,
+  "list_mailing_lists": 8,
+  "create_mailing_list": 16,
+  "list_campaigns": 8,
+  "list_automations": 8,
+  "list_deals": 8,
+  "create_deal": 16,
+  "audit_activecampaign_account": 40
+}

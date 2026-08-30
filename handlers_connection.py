@@ -60,6 +60,7 @@ async def resolve_or_error(ctx, connection_id: str = ""):
     "connect_activecampaign",
     "Connect your own ActiveCampaign account by saving its API URL and API key, after checking they actually work.",
     action_type="write", chain_callable=True, event="activecampaign-connector.connect_activecampaign",
+    effects=["create:connection"], data_model=ConnectActiveCampaignResult,
 )
 async def connect_activecampaign(ctx, params: ConnectActiveCampaignParams) -> ActionResult:
     """Verify the credentials via GET /users/me, then store them."""
@@ -91,8 +92,10 @@ async def connect_activecampaign(ctx, params: ConnectActiveCampaignParams) -> Ac
     "disconnect_activecampaign",
     "Disconnect an ActiveCampaign account: deletes the saved API URL/API key. Nothing in ActiveCampaign itself is changed.",
     action_type="write", chain_callable=True, event="activecampaign-connector.disconnect_activecampaign",
+    effects=["delete:connection"], data_model=DeleteResult,
 )
 async def disconnect_activecampaign(ctx, params: DisconnectActiveCampaignParams) -> ActionResult:
+    """Remove one saved connection's credentials; ActiveCampaign data is untouched."""
     connections = await _load_connections(ctx)
     remaining = [c for c in connections if c.get("id") != params.connection_id]
     if len(remaining) == len(connections):
@@ -107,6 +110,7 @@ async def disconnect_activecampaign(ctx, params: DisconnectActiveCampaignParams)
     action_type="read", chain_callable=True, data_model=ConnectionList,
 )
 async def list_connections(ctx, params: NoParams) -> ActionResult:
+    """Return safe connection metadata only -- never the stored API key."""
     connections = await _load_connections(ctx)
     return ActionResult.ok(ConnectionList(connections=[
         ActiveCampaignConnection(id=c.get("id", ""), label=c.get("label", ""), api_url=c.get("api_url", ""))

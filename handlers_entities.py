@@ -72,7 +72,7 @@ async def list_contacts(ctx, params: ListContactsParams) -> ActionResult:
     "create_contact",
     "Create a new contact in the connected ActiveCampaign account.",
     action_type="write", chain_callable=True, event="activecampaign-connector.create_contact",
-    data_model=ContactCreateResult,
+    data_model=ContactCreateResult, effects=["create:contact"],
 )
 async def create_contact(ctx, params: CreateContactParams) -> ActionResult:
     """POST /contacts."""
@@ -115,7 +115,7 @@ async def list_mailing_lists(ctx, params: ListListsParams) -> ActionResult:
     "create_mailing_list",
     "Create a new mailing list on the connected ActiveCampaign account.",
     action_type="write", chain_callable=True, event="activecampaign-connector.create_mailing_list",
-    data_model=ListCreateResult,
+    data_model=ListCreateResult, effects=["create:list"],
 )
 async def create_mailing_list(ctx, params: CreateListParams) -> ActionResult:
     """POST /lists."""
@@ -194,7 +194,7 @@ async def list_deals(ctx, params: ListDealsParams) -> ActionResult:
     "create_deal",
     "Create a new sales pipeline deal in the connected ActiveCampaign account.",
     action_type="write", chain_callable=True, event="activecampaign-connector.create_deal",
-    data_model=DealCreateResult,
+    data_model=DealCreateResult, effects=["create:deal"],
 )
 async def create_deal(ctx, params: CreateDealParams) -> ActionResult:
     """POST /deals."""
