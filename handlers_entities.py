@@ -65,7 +65,7 @@ async def list_contacts(ctx, params: ListContactsParams) -> ActionResult:
     except ac.ClientFail as exc:
         return ActionResult.error(exc.payload["message"], code=exc.payload["code"])
     contacts = [_contact_entity(c) for c in data.get("contacts", [])]
-    return ActionResult.ok(ContactList(contacts=contacts))
+    return ActionResult.success(ContactList(contacts=contacts), summary="Contacts listed.")
 
 
 @chat.function(
@@ -90,7 +90,7 @@ async def create_contact(ctx, params: CreateContactParams) -> ActionResult:
     except ac.ClientFail as exc:
         return ActionResult.error(exc.payload["message"], code=exc.payload["code"])
     c = data.get("contact", {})
-    return ActionResult.ok(ContactCreateResult(id=c.get("id", ""), email=c.get("email", "")))
+    return ActionResult.success(ContactCreateResult(id=c.get("id", ""), email=c.get("email", "")), summary="Contact created.")
 
 
 @chat.function(
@@ -108,7 +108,7 @@ async def list_mailing_lists(ctx, params: ListListsParams) -> ActionResult:
     except ac.ClientFail as exc:
         return ActionResult.error(exc.payload["message"], code=exc.payload["code"])
     lists = [_list_entity(l) for l in data.get("lists", [])]
-    return ActionResult.ok(MailingListList(lists=lists))
+    return ActionResult.success(MailingListList(lists=lists), summary="Mailing lists listed.")
 
 
 @chat.function(
@@ -133,7 +133,7 @@ async def create_mailing_list(ctx, params: CreateListParams) -> ActionResult:
     except ac.ClientFail as exc:
         return ActionResult.error(exc.payload["message"], code=exc.payload["code"])
     l = data.get("list", {})
-    return ActionResult.ok(ListCreateResult(id=l.get("id", ""), name=l.get("name", "")))
+    return ActionResult.success(ListCreateResult(id=l.get("id", ""), name=l.get("name", "")), summary="Mailing list created.")
 
 
 @chat.function(
@@ -151,7 +151,7 @@ async def list_campaigns(ctx, params: ListCampaignsParams) -> ActionResult:
     except ac.ClientFail as exc:
         return ActionResult.error(exc.payload["message"], code=exc.payload["code"])
     campaigns = [_campaign_entity(c) for c in data.get("campaigns", [])]
-    return ActionResult.ok(CampaignList(campaigns=campaigns))
+    return ActionResult.success(CampaignList(campaigns=campaigns), summary="Campaigns listed.")
 
 
 @chat.function(
@@ -169,7 +169,7 @@ async def list_automations(ctx, params: ListAutomationsParams) -> ActionResult:
     except ac.ClientFail as exc:
         return ActionResult.error(exc.payload["message"], code=exc.payload["code"])
     automations = [_automation_entity(a) for a in data.get("automations", [])]
-    return ActionResult.ok(AutomationList(automations=automations))
+    return ActionResult.success(AutomationList(automations=automations), summary="Automations listed.")
 
 
 @chat.function(
@@ -187,7 +187,7 @@ async def list_deals(ctx, params: ListDealsParams) -> ActionResult:
     except ac.ClientFail as exc:
         return ActionResult.error(exc.payload["message"], code=exc.payload["code"])
     deals = [_deal_entity(d) for d in data.get("deals", [])]
-    return ActionResult.ok(DealList(deals=deals))
+    return ActionResult.success(DealList(deals=deals), summary="Deals listed.")
 
 
 @chat.function(
@@ -212,4 +212,4 @@ async def create_deal(ctx, params: CreateDealParams) -> ActionResult:
     except ac.ClientFail as exc:
         return ActionResult.error(exc.payload["message"], code=exc.payload["code"])
     d = data.get("deal", {})
-    return ActionResult.ok(DealCreateResult(deal_id=d.get("id", ""), title=d.get("title", "")))
+    return ActionResult.success(DealCreateResult(deal_id=d.get("id", ""), title=d.get("title", "")), summary="Deal created.")

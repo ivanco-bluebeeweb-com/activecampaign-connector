@@ -83,9 +83,9 @@ async def connect_activecampaign(ctx, params: ConnectActiveCampaignParams) -> Ac
         "access_token": params.access_token,
     })
     await _save_connections(ctx, connections)
-    return ActionResult.ok(ConnectActiveCampaignResult(
+    return ActionResult.success(ConnectActiveCampaignResult(
         connection_id=connection_id, label=params.label or "ActiveCampaign account", api_url=api_url,
-    ))
+    ), summary="Activecampaign connected.")
 
 
 @chat.function(
@@ -101,7 +101,7 @@ async def disconnect_activecampaign(ctx, params: DisconnectActiveCampaignParams)
     if len(remaining) == len(connections):
         return ActionResult.error("No connection found with that id.", code=ac.AC_NOT_FOUND)
     await _save_connections(ctx, remaining)
-    return ActionResult.ok(DeleteResult(deleted=True, id=params.connection_id))
+    return ActionResult.success(DeleteResult(deleted=True, id=params.connection_id), summary="Activecampaign disconnected.")
 
 
 @chat.function(
@@ -112,7 +112,7 @@ async def disconnect_activecampaign(ctx, params: DisconnectActiveCampaignParams)
 async def list_connections(ctx, params: NoParams) -> ActionResult:
     """Return safe connection metadata only -- never the stored API key."""
     connections = await _load_connections(ctx)
-    return ActionResult.ok(ConnectionList(connections=[
+    return ActionResult.success(ConnectionList(connections=[
         ActiveCampaignConnection(id=c.get("id", ""), label=c.get("label", ""), api_url=c.get("api_url", ""))
         for c in connections
-    ]))
+    ]), summary="Connections listed.")

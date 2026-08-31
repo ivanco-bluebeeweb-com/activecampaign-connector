@@ -38,10 +38,10 @@ async def audit_activecampaign_account(ctx, params: AuditActiveCampaignAccountPa
         if isinstance(exc, ac.ClientFail):
             return ActionResult.error(exc.payload["message"], code=exc.payload["code"])
         return ActionResult.error("ActiveCampaign returned an invalid total.", code=ac.AC_RESPONSE_UNEXPECTED)
-    return ActionResult.ok(ActiveCampaignAccountReport(
+    return ActionResult.success(ActiveCampaignAccountReport(
         total_contacts=counts["contacts"],
         total_lists=counts["lists"],
         total_campaigns=counts["campaigns"],
         total_automations=counts["automations"],
         total_deals=counts["deals"],
-    ))
+    ), summary="Activecampaign account audit ready.")
