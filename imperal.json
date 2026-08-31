@@ -824,5 +824,15 @@
       "refresh": "manual",
       "center_overlay": false
     }
+  ],
+  "secrets": [
+    {
+      "name": "activecampaign_connections",
+      "description": "JSON array of connected Activecampaign accounts/credentials. Managed by the app's connect/disconnect tools.",
+      "required": false,
+      "write_mode": "both",
+      "max_bytes": 16384,
+      "scope": "user"
+    }
   ]
 }
