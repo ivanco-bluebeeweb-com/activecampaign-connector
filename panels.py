@@ -14,8 +14,7 @@ import handlers_connection as h
 
 def _settings_button() -> ui.UINode:
     return ui.Button(
-        "App settings", variant="secondary", size="sm", full_width=True,
-        icon="settings", on_click=ui.Call("__panel__activecampaign_settings"),
+        "App settings", variant="secondary", size="sm", icon="settings", on_click=ui.Call("__panel__activecampaign_settings"),
     )
 
 
@@ -29,8 +28,8 @@ def _connections_section(connections: list[dict]) -> ui.UINode:
 
 
 def _connect_form() -> ui.UINode:
-    return ui.Stack(direction="v", gap=2, full_width=True, children=[
-        ui.Button("Sign in with ActiveCampaign (OAuth)", variant="primary", size="sm", full_width=True, icon="login"),
+    return ui.Stack(direction="v", gap=2, children=[
+        ui.Button("Sign in with ActiveCampaign (OAuth)", variant="primary", size="sm", icon="login"),
         ui.Divider(),
         ui.Text("Or connect via Account API Key", variant="caption"),
         ui.Form(
@@ -58,7 +57,7 @@ def _connect_form() -> ui.UINode:
 
 def _help_modal() -> ui.UINode:
     return ui.Modal(
-        trigger=ui.Button("How do I set this up?", variant="ghost", size="sm", full_width=True),
+        trigger=ui.Button("How do I set this up?", variant="ghost", size="sm"),
         title="Connect ActiveCampaign",
         children=[
             ui.Text("In ActiveCampaign, open Settings > Developer. Copy the API URL and API Key, then paste both here. The key is saved securely for this connection."),
