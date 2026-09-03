@@ -29,7 +29,11 @@ def _connections_section(connections: list[dict]) -> ui.UINode:
 
 
 def _connect_form() -> ui.UINode:
-    return ui.Form(
+    return ui.Stack(direction="v", gap=2, full_width=True, children=[
+        ui.Button("Sign in with ActiveCampaign (OAuth)", variant="primary", size="sm", full_width=True, icon="login"),
+        ui.Divider(),
+        ui.Text("Or connect via Account API Key", variant="caption"),
+        ui.Form(
         submit_label="Connect ActiveCampaign",
         action=ui.Call("connect_activecampaign"),
         children=[
@@ -49,6 +53,7 @@ def _connect_form() -> ui.UINode:
             ]),
         ],
     )
+    ])
 
 
 def _help_modal() -> ui.UINode:
